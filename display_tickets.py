@@ -1,6 +1,7 @@
 #display list of tickets, with pages
 def display_tickets(tickets,page):
 	for ticket in tickets:
+		return
 		#pick what to display
 		#the fields are THE SAME FOR BOTH, and are:
 		# url

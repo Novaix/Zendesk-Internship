@@ -15,7 +15,7 @@ url = authentication.readline()+'/api/v2/tickets'
 
 tickets=get_tickets.get_tickets(url,user,pwd)
 
-display_tickets.display_tickets(tickets)
+display_tickets.display_tickets(tickets,1)
 
 #rudimentary tests (prints) work so far
 #todo: input loop

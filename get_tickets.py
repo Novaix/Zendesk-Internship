@@ -4,9 +4,12 @@ import requests
 #Connect to API, retrieve tickets
 def get_tickets(url,user,pwd):
 	#get tickets
-	response = requests.get(url+'.json',auth=(user,pwd))
-
-	#todo: handle max retry error
+	try:
+		response = requests.get(url+'.json',auth=(user,pwd))
+	except requests.exceptions.ConnectionError:
+		print(
+			"Could not connect to API. Try checking your internet connection.")
+		exit()
 
 	#quit if error
 	handle_response_code(response.status_code)
