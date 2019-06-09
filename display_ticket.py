@@ -1,12 +1,10 @@
-import json
-import requests
+import zendesk_interface
 
 #display individual ticket
-def display_ticket(id,url,auth):
+def display_ticket(id,login):
 	#get new ticket, in case it was updated
-	response=requests.get(url+'/'+id+'.json',auth=(user,pwd))
-	ticket=response.json()
-	
+	ticket=get_ticket(id,*login)
+
 	#pick what to display
 	#the fields are THE SAME FOR BOTH, and are:
 	# url
@@ -44,3 +42,6 @@ def display_ticket(id,url,auth):
 	# brand_id
 	# allow_channelback
 	# allow_attachments
+
+def get_ticket(id,url,user,pwd):
+	return zendesk_interface.get_json(url+'/'+str(id)+'.json',user,pwd)
