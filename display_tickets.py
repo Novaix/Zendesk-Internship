@@ -5,7 +5,7 @@ def display_tickets(page,login):
 	tickets=get_tickets(*login)
 	page_max=1+len(tickets)//25
 	#display tickets
-	# for ticket in tickets:
+	# for ticket in tickets[page:page+25]:
 		
 		#pick what to display
 		#the fields are THE SAME FOR BOTH, and are:
@@ -16,12 +16,12 @@ def display_tickets(page,login):
 		# created_at
 		# updated_at
 		# type
-		# subject
-		# raw_subject
+			# subject
+			# raw_subject
 		# description
-		# priority
-		# status
-		# recipient
+			# priority
+			# status
+			# recipient
 		# requester_id
 		# submitter_id
 		# assignee_id
@@ -44,7 +44,8 @@ def display_tickets(page,login):
 		# brand_id
 		# allow_channelback
 		# allow_attachments
-	print("'n' for next page, 'p' for previous page, 'j' to jump to a page, 'v' to view a ticket.")
+	print("'n' for next page, 'p' for previous page, 'j' to jump to a page,"
+		 "'v' to view a ticket, 'q' to quit.")
 	#this lets the ticket_viewer wrap around correctly
 	return page_max
 

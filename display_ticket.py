@@ -4,6 +4,9 @@ import zendesk_interface
 def display_ticket(id,login):
 	#get new ticket, in case it was updated
 	ticket=get_ticket(id,*login)
+	# print(ticket)
+	for field,entry in ticket["ticket"].items():
+		print(field+": "+str(entry))
 
 	#pick what to display
 	#the fields are THE SAME FOR BOTH, and are:
