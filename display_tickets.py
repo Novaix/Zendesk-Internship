@@ -16,7 +16,8 @@ def display_tickets(page,login):
 	print("\n'n' for next page, 'p' for previous page, 'j' to jump to a page,"
 		 "'v' to view a ticket, 'q' to quit.")
 	#returning this lets the ticket_viewer wrap around correctly
-	return page_max
+	#and to prevent bad API requests
+	return (page_max,len(tickets))
 
 def get_tickets(url,user,pwd):
 	#get tickets

@@ -15,7 +15,7 @@ def main():
 	#a 'legal input' with no corresponding function, or vice-versa
 	commands={
 	"j":lambda page: get_number("Enter the page to jump to: ",page_max),
-	"v":lambda page: view_ticket(page,login),
+	"v":lambda page: view_ticket(page,login,ticket_max),
 	"n":lambda page: (page%page_max)+1,
 	"p":lambda page: ((page-2)%page_max)+1,
 	"q":lambda page: sys.exit()
@@ -23,12 +23,12 @@ def main():
 
 	#input loop
 	while(True):
-		page_max=display_tickets.display_tickets(page,login)
+		(page_max,ticket_max)=display_tickets.display_tickets(page,login)
 		command=get_command(commands.keys())
 		page=commands[command](page)
 
-def view_ticket(return_page,login):
-	ticket_id=get_number("Enter the id of the ticket to view: ")
+def view_ticket(return_page,login,ticket_max):
+	ticket_id=get_number("Enter the id of the ticket to view: ",ticket_max)
 	display_ticket.display_ticket(ticket_id,login)
 	input("Press enter to return to the list of tickets.")
 	return return_page
