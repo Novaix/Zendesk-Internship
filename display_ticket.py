@@ -3,10 +3,9 @@ import zendesk_interface
 #display individual ticket
 def display_ticket(id,login):
 	#get new ticket, in case it was updated
-	ticket=get_ticket(id,*login)
+	ticket=get_ticket(id,*login)["ticket"]
 	print("\n")
-	for field,entry in ticket["ticket"].items():
-		print("{:21}: {}".format(field,str(entry)))
+	print_ticket(ticket)
 
 	#pick what to display
 	#the fields are THE SAME FOR BOTH, and are:
@@ -45,6 +44,11 @@ def display_ticket(id,login):
 	# brand_id
 	# allow_channelback
 	# allow_attachments
+
+def print_ticket(ticket):
+	for field,entry in ticket.items():
+		print("{:21}: {}".format(field,str(entry)))
+
 
 def get_ticket(id,url,user,pwd):
 	return zendesk_interface.get_json(url+'/'+str(id)+'.json',user,pwd)

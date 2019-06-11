@@ -3,6 +3,11 @@ import display_tickets
 import sys
 
 def main():
+	def refresh_tickets(page):
+		nonlocal tickets
+		tickets=None
+		return page
+
 	#As per https://develop.zendesk.com/hc/en-us/articles/360001074168-Making-requests-to-the-Zendesk-API
 	#we have the basic structure of how requests to the API are formed
 	
@@ -11,21 +16,31 @@ def main():
 	page=1
 
 	#kept in main to avoid having to pass variables
+	#
 	#implemented as a dict of lambda functions to ensure there will never be
 	#a 'legal input' with no corresponding function, or vice-versa
+	#
+	#all functions can't take more or less than one input
+	#(as they're all called with one input)
+	#and all functions must return a page to go to
 	commands={
 	"j":lambda page: get_number("Enter the page to jump to: ",page_max),
-	"v":lambda page: view_ticket(page,login,ticket_max),
+	"v":lambda page: view_ticket(page,login,len(tickets)),
 	"n":lambda page: (page%page_max)+1,
 	"p":lambda page: ((page-2)%page_max)+1,
-	"q":lambda page: sys.exit()
+	"q":lambda page: sys.exit(),
+	"r":lambda page: refresh_tickets(page)
 	}
+
+	tickets=None
 
 	#input loop
 	while(True):
-		(page_max,ticket_max)=display_tickets.display_tickets(page,login)
+		(page_max,tickets)=display_tickets.display_tickets(page,login,tickets)
 		command=get_command(commands.keys())
 		page=commands[command](page)
+
+
 
 def view_ticket(return_page,login,ticket_max):
 	ticket_id=get_number("Enter the id of the ticket to view: ",ticket_max)
@@ -46,14 +61,15 @@ def get_number(prompt,max_=float('inf')):
 		output=input(prompt)
 		try:
 			output=int(output)
-			if (output<1) or (output>max_):
-				print(str(output)+" is not a valid number (too big or too small).")
+			if (output<1):
+				print(str(output)+" is not a valid number (must be above 0).")
+			elif (output>max_):
+				print(str(output)+" is not a valid number (too big).")
 				continue
 		except ValueError:
 			print(str(output)+" is not a number.")
 			continue
 		return output
-
 
 #Get authentication details and base url from file
 def get_authentication():

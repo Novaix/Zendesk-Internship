@@ -1,23 +1,45 @@
 import zendesk_interface
 
 #display list of tickets, with pages
-def display_tickets(page,login):
-	tickets=get_tickets(*login)["tickets"]
+def display_tickets(page,login,tickets):
+	if tickets==None:
+		tickets=get_tickets(*login)["tickets"]
 	page_max=1+len(tickets)//25
 	# display tickets; assumed max ID of 1,000,000,000
-	print("\n{:11}{:9}{:10}{:8}{:11}{:11}{:11}{}".format("ID:","Type:",
-		"Priority:","Status:","Created:","Updated:","Due:","Subject/Tags:"))
-	for ticket in tickets[25*(page-1):25*(page-1)+25]:
-		print("{:11}{:9}{:10}{:8}{:11.10}{:11.10}{:11.10}\"{}\"  {}".format(str(ticket["id"]),
-			str(ticket["type"]),str(ticket["priority"]),str(ticket["status"]),
-			str(ticket["created_at"]),str(ticket["updated_at"]),
-			str(ticket["due_at"]),str(ticket["subject"]),str(ticket["tags"])))
+	print("\n{:11}{:9}{:10}{:8}{:11}{:11}{:11}{}".format(
+		"ID:",
+		"Type:",
+		"Priority:",
+		"Status:",
+		"Created:",
+		"Updated:",
+		"Due:",
+		"Subject/Tags:"))
+
+	print_tickets(tickets,page)
+
 	print("Page {}/{}".format(page,page_max))
 	print("\n'n' for next page, 'p' for previous page, 'j' to jump to a page,"
-		 "'v' to view a ticket, 'q' to quit.")
-	#returning this lets the ticket_viewer wrap around correctly
-	#and to prevent bad API requests
-	return (page_max,len(tickets))
+		 "'v' to view a ticket, 'r' to refresh list of tickets, 'q' to quit.")
+	#returning page_max lets the ticket_viewer wrap around correctly
+	#and tickets to prevent bad API requests and prevent needing to constantly
+	#make requests
+	return (page_max,tickets)
+
+def print_tickets(tickets,page):
+	for ticket in tickets[25*(page-1):25*(page-1)+25]:
+		print("{:11}{:9}{:10}{:8}{:11.10}{:11.10}{:11.10}\"{}\"  {}".format(
+			str(ticket.get("id","Missing")),
+			str(ticket.get("type","Missing")),
+			str(ticket.get("priority","Missing")),
+			str(ticket.get("status","Missing")),
+			str(ticket.get("created_at","Missing")),
+			str(ticket.get("updated_at","Missing")),
+			str(ticket.get("due_at","Missing")),
+			str(ticket.get("subject","Missing")),
+			str(ticket.get("tags","Missing"))))
+
+
 
 def get_tickets(url,user,pwd):
 	#get tickets

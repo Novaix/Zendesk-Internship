@@ -6,4 +6,5 @@ The program automatically presents the list of all tickets upon loading, togethe
 -From the list of tickets, entering 'n' or 'p' moves through pages, which will present the new page before reiterating the list of commands.
 -Similarly, 'j' presents a prompt for a number, which lets the user jump to a desired page without having to cycle through them one at a time.
 -Entering 'v' presents a prompt for an ID number, which will then display the corresponding ticket in full detail. After this, pressing enter again will return to the list of tickets, at the page the user was previously on.
+-Entering 'r' will refresh the list of tickets, i.e. request a new one, in case it has been updated since the last request.
 -Entering 'q' will exit the program.
