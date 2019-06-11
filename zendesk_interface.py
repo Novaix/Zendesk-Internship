@@ -4,7 +4,7 @@ import sys
 
 #Connect to API, retrieve ticket(s)
 def get_json(url,user,pwd):
-	#get ticket(s)
+	#make GET request
 	try:
 		response = requests.get(url,auth=(user,pwd))
 	except requests.exceptions.ConnectionError:
