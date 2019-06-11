@@ -5,10 +5,10 @@ def display_tickets(page,login):
 	tickets=get_tickets(*login)["tickets"]
 	page_max=1+len(tickets)//25
 	# display tickets; assumed max ID of 1,000,000,000
-	print("\n{:11}{:9}{:9}{:8}{:11}{:11}{:11}{}".format("ID:","Type:",
+	print("\n{:11}{:9}{:10}{:8}{:11}{:11}{:11}{}".format("ID:","Type:",
 		"Priority:","Status:","Created:","Updated:","Due:","Subject/Tags:"))
 	for ticket in tickets[25*(page-1):25*(page-1)+25]:
-		print("{:11}{:9}{:9}{:8}{:11.10}{:11.10}{:11.10}\"{}\"; {}".format(str(ticket["id"]),
+		print("{:11}{:9}{:10}{:8}{:11.10}{:11.10}{:11.10}\"{}\"  {}".format(str(ticket["id"]),
 			str(ticket["type"]),str(ticket["priority"]),str(ticket["status"]),
 			str(ticket["created_at"]),str(ticket["updated_at"]),
 			str(ticket["due_at"]),str(ticket["subject"]),str(ticket["tags"])))

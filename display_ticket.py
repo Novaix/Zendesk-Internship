@@ -4,7 +4,7 @@ import zendesk_interface
 def display_ticket(id,login):
 	#get new ticket, in case it was updated
 	ticket=get_ticket(id,*login)
-	# print(ticket)
+	print("\n")
 	for field,entry in ticket["ticket"].items():
 		print(field+": "+str(entry))
 
@@ -39,7 +39,7 @@ def display_ticket(id,login):
 	# tags
 	# custom_fields
 	# satisfaction_rating
-	# sharing_agreement_ids
+	# sharing_agreement_ids; len: 21
 	# fields
 	# followup_ids
 	# brand_id

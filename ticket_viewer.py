@@ -47,10 +47,10 @@ def get_number(prompt,max_=float('inf')):
 		try:
 			output=int(output)
 			if (output<1) or (output>max_):
-				print(output+" is not a valid number (too big or too small).")
+				print(str(output)+" is not a valid number (too big or too small).")
 				continue
 		except ValueError:
-			print(output+" is not a number.")
+			print(str(output)+" is not a number.")
 			continue
 		return output
 
