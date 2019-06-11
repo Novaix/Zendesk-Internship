@@ -2,51 +2,20 @@ import zendesk_interface
 
 #display list of tickets, with pages
 def display_tickets(page,login):
-	tickets=get_tickets(*login)
+	tickets=get_tickets(*login)["tickets"]
 	page_max=1+len(tickets)//25
-	#display tickets
-	# for ticket in tickets[page:page+25]:
-		
-		#pick what to display
-		#the fields are THE SAME FOR BOTH, and are:
-		# url
-		# id
-		# external_id
-		# via
-		# created_at
-		# updated_at
-		# type
-			# subject
-			# raw_subject
-		# description
-			# priority
-			# status
-			# recipient
-		# requester_id
-		# submitter_id
-		# assignee_id
-		# organization_id
-		# group_id
-		# collaborator_ids
-		# follower_ids
-		# email_cc_ids
-		# forum_topic_id
-		# problem_id
-		# has_incidents
-		# is_public
-		# due_at
-		# tags
-		# custom_fields
-		# satisfaction_rating
-		# sharing_agreement_ids
-		# fields
-		# followup_ids
-		# brand_id
-		# allow_channelback
-		# allow_attachments
-	print("'n' for next page, 'p' for previous page, 'j' to jump to a page,"
+	# display tickets; assumed max ID of 1,000,000,000
+	print("\n{:11}{:9}{:9}{:8}{:11}{:11}{:11}{}".format("ID:","Type:",
+		"Priority:","Status:","Created:","Updated:","Due:","Subject/Tags:"))
+	for ticket in tickets[25*(page-1):25*(page-1)+25]:
+		print("{:11}{:9}{:9}{:8}{:11.10}{:11.10}{:11.10}\"{}\"; {}".format(str(ticket["id"]),
+			str(ticket["type"]),str(ticket["priority"]),str(ticket["status"]),
+			str(ticket["created_at"]),str(ticket["updated_at"]),
+			str(ticket["due_at"]),str(ticket["subject"]),str(ticket["tags"])))
+	print("Page {}/{}".format(page,page_max))
+	print("\n'n' for next page, 'p' for previous page, 'j' to jump to a page,"
 		 "'v' to view a ticket, 'q' to quit.")
-	#this lets the ticket_viewer wrap around correctly
+	#returning this lets the ticket_viewer wrap around correctly
 	return page_max
 
 def get_tickets(url,user,pwd):

@@ -11,12 +11,14 @@ def main():
 	page=1
 
 	#kept in main to avoid having to pass variables
+	#implemented as a dict of lambda functions to ensure there will never be
+	#a 'legal input' with no corresponding function, or vice-versa
 	commands={
-	"j":lambda a: get_number("Enter the page to jump to: ",page_max),
-	"v":lambda a: view_ticket(a,login),
-	"n":lambda a: (a%page_max)+1,
-	"p":lambda a: ((a-2)%page_max)+1,
-	"q":lambda a: sys.exit()
+	"j":lambda page: get_number("Enter the page to jump to: ",page_max),
+	"v":lambda page: view_ticket(page,login),
+	"n":lambda page: (page%page_max)+1,
+	"p":lambda page: ((page-2)%page_max)+1,
+	"q":lambda page: sys.exit()
 	}
 
 	#input loop
