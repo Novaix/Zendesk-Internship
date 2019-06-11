@@ -22,17 +22,17 @@ def get_json(url,user,pwd):
 def handle_response_code(code):
 	#Convert status codes to user-friendly output
 	error_code_switcher = {
-		301: " Redirected.",
-		400: " Bad request.",
-		401: " Authentication error.",
-		403: " Forbidden request.",
-		404: " Resource not found.",
-		500: " Internal server error.",
-		503: " Service unavailable.",
-		504: " Gateway timeout."
+		301: " Redirected",
+		400: " Bad request",
+		401: " Authentication error",
+		403: " Forbidden request",
+		404: " Resource not found",
+		500: " Internal server error",
+		503: " Service unavailable",
+		504: " Gateway timeout"
 	}
 
 	#quit on error
 	if code!=200:
 		sys.exit(	'Error connecting to API. Status: '+str(code)+
-				error_code_switcher.get(code,""))
+				error_code_switcher.get(code,"")+". Exiting.")

@@ -6,7 +6,7 @@ def display_ticket(id,login):
 	ticket=get_ticket(id,*login)
 	print("\n")
 	for field,entry in ticket["ticket"].items():
-		print(field+": "+str(entry))
+		print("{:21}: {}".format(field,str(entry)))
 
 	#pick what to display
 	#the fields are THE SAME FOR BOTH, and are:
