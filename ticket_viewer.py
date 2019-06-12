@@ -64,6 +64,7 @@ def get_number(prompt,max_=float('inf')):
 			output=int(output)
 			if (output<1):
 				print(str(output)+" is not a valid number (must be above 0).")
+				continue
 			elif (output>max_):
 				print(str(output)+" is not a valid number (too big).")
 				continue
@@ -83,4 +84,5 @@ def get_authentication():
 
 	return (url,user,pwd)
 
-main()
+if __name__ == "__main__":
+	main()

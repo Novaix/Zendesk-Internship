@@ -31,7 +31,13 @@ def display_tickets(page,login,tickets):
 
 def print_tickets(tickets,page):
 	for ticket in tickets[25*(page-1):25*(page-1)+25]:
-		print("{:11}{:9}{:10}{:8}{:11.10}{:11.10}{:11.10}\"{}\"  {}".format(
+		subject=ticket.get("subject","")
+		if subject=="":
+			subject="Missing"
+		else:
+			subject="\""+subject+"\""
+
+		print("{:11}{:9}{:10}{:8}{:11.10}{:11.10}{:11.10}{}  {}".format(
 			str(ticket.get("id","Missing")),
 			str(ticket.get("type","Missing")),
 			str(ticket.get("priority","Missing")),
@@ -39,7 +45,7 @@ def print_tickets(tickets,page):
 			str(ticket.get("created_at","Missing")),
 			str(ticket.get("updated_at","Missing")),
 			str(ticket.get("due_at","Missing")),
-			str(ticket.get("subject","Missing")),
+			str(subject),
 			str(ticket.get("tags","Missing"))))
 
 #get requests the list of all tickets
