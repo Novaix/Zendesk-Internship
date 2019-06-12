@@ -22,7 +22,7 @@ def display_ticket_list(page,tickets):
 	#returning page_max lets the ticket_viewer wrap around correctly
 	#and tickets to prevent bad API requests and prevent needing to constantly
 	#make requests
-	return (page_max,tickets)
+	return page_max
 
 def print_ticket_list(tickets,page):
 	for ticket in tickets[25*(page-1):25*(page-1)+25]:

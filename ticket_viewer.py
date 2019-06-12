@@ -1,6 +1,4 @@
-import display_ticket
-import display_ticket_list
-import zendesk_interface
+import display_ticket, display_ticket_list, zendesk_interface, io_process
 import sys
 
 #As per https://develop.zendesk.com/hc/en-us/articles/360001074168-Making-requests-to-the-Zendesk-API
@@ -14,7 +12,7 @@ def main():
 		tickets=None
 		return page
 
-	login=get_authentication()
+	login=io_process.get_authentication()
 	page=1
 	tickets=None
 
@@ -27,8 +25,8 @@ def main():
 	#(as they're all called with one input)
 	#and all functions must return a page number (for the next display)
 	commands={
-	"j":lambda page: get_number("Enter the page to jump to: ",page_max),
-	"v":lambda page: view_ticket(page,*login,len(tickets)),
+	"j":lambda page: io_process.get_number("Enter the page to jump to: ",page_max),
+	"v":lambda page: view_ticket(page,login,len(tickets)),
 	"n":lambda page: (page%page_max)+1,
 	"p":lambda page: ((page-2)%page_max)+1,
 	"q":lambda page: sys.exit(),
@@ -39,75 +37,26 @@ def main():
 	while(True):
 		#get new list if it needs updating
 		if(tickets==None):
-			tickets=get_ticket_list(*login)["tickets"]
+			tickets=zendesk_interface.get_ticket_list(*login)
 
 		#display list of tickets
-		(page_max,tickets)=display_ticket_list.display_ticket_list(page,tickets)
-
+		page_max=display_ticket_list.display_ticket_list(page,tickets)
 
 		#get a command from user
-		command=get_command(commands.keys())
+		command=io_process.get_command(commands.keys())
 		#execude command AND update page as necessary
 		page=commands[command](page)
 
 #display individual ticket details
-def view_ticket(return_page,url,user,pwd,ticket_max):
-	ticket_id=get_number("Enter the id of the ticket to view: ",ticket_max)
+def view_ticket(return_page,login,ticket_max):
+	ticket_id=io_process.get_number("Enter the id of the ticket to view: ",ticket_max)
 
-	ticket=zendesk_interface.get_json(url+'/'+str(ticket_id)+'.json',user,pwd)["ticket"]
+	ticket=zendesk_interface.get_ticket(*login,str(ticket_id))
 
 	display_ticket.display_ticket(ticket)
 	#ignores input, just serves to wait for user
 	input("Press enter to return to the list of tickets.")
 	return return_page
-
-
-#get requests the list of all tickets
-def get_ticket_list(url,user,pwd):
-	tickets=zendesk_interface.get_json(url+'.json',user,pwd)
-	
-	#if there is more than one API-side page of tickets
-	#append new pages to ticket list and update next page until finished
-	while (tickets["next_page"]!=None):
-		more_tickets=zendesk_interface.get_json(tickets["next_page"],user,pwd)
-		tickets["tickets"]+=more_tickets["tickets"]
-		tickets["next_page"]=more_tickets["next_page"]
-	return tickets
-
-
-
-def get_command(legal_commands):
-	command=""
-	while(command not in legal_commands):
-		command=input()
-	return command
-
-def get_number(prompt,max_=float('inf')):
-	while(True):
-		output=input(prompt)
-		try:
-			output=int(output)
-			if (output<1):
-				print(str(output)+" is not a valid number (must be above 0).")
-				continue
-			elif (output>max_):
-				print(str(output)+" is not a valid number (too big).")
-				continue
-		except ValueError:
-			print(str(output)+" is not a number.")
-			continue
-		return output
-
-#Get authentication details and base url from file
-def get_authentication():
-	authentication=open("authentication.txt","r")
-	#trim newlines
-	user = authentication.readline()[:-1]
-	pwd = authentication.readline()[:-1]
-	#can append '.json' for all tickets, '/{id}.json' for individual ticket
-	url = authentication.readline()+'/api/v2/tickets'
-
-	return (url,user,pwd)
 
 if __name__ == "__main__":
 	main()

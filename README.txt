@@ -15,17 +15,13 @@ The login details are read from authentication.txt (so as to make it comparative
 ________________________________________________________________________________
 
 
-The program is split into 4 components: one which handles displaying the list of tickets, one which handles displaying an individual ticket, one which handles making requests to the zendesk API, and one which handles the input/output and overall code structure.
+The program is split into 5 components: one which handles displaying the list of tickets, one which handles displaying an individual ticket, one which handles making requests to the zendesk API, one which handles the input/output, and lastly one which handles overall code structure.
 
-The list of tickets is displayed in table format, with the following fields: id, type, priority, status, created_at, updated_at, due_at, subject, tags. The individual ticket display shows all of its initialised fields.
+The list of tickets is displayed in table format, with the following fields: id, type, priority, status, created_at, updated_at, due_at, subject, tags. The individual ticket display shows all of its initialised fields and their values, with the colons separating them aligned for readability and aesthetic.
 
 It is assumed that the maximum ticket ID is 1,000,000,000. Ticket IDs higher than this should only cause trivial display issues at best, i.e. slightly-misaligned columns.
 
-The current design has no meaningful advantage, and is only the way it is as a result of time constraints, so the following changes are acknowledged as improvements:
--moving more of the API-related functions (such as appending the proper strings to the base url) to zendesk_interface
--maybe extracting out the input/output and putting that in its own module separate to the ticket_viewer module (which presently handles both input/output as well as overall program logic/structure).
-
-The tests were constructed by writing one test for each function, after removing the trivial functions (such as get_ticket, which is basically just a call to get_json (see previous comment about moving API functions to zendesk_interface!)). API-related functions just involve running the function and ensuring it does not crash. Functions with meaningful output or return values have those compared to what they are supposed to be, as basic unit tests; this includes abnormal input/output or input/return pairs, such as displaying an empty ticket. Functions that require input (this includes an integration test on ticket_viewer.main) have stdin mocked, and their possible values tested (valid inputs, invalid inputs, and abnormal inputs all). 
+The tests were constructed by writing one test for each function, after removing trivial one-line functions (such as zendesk_interface.get_ticket, which is essentially equivalent to zendesk_interface.get_json). API-related functions just involve running the function and ensuring it does not crash; this is just because trying to evaluate the output/return-value is questionable, given that it's connecting to a completely separate thing. Functions with meaningful output or return values have those compared to what they are supposed to be, as basic unit tests; this includes abnormal input/output or input/return pairs, such as displaying an empty ticket. Functions that require input (this includes an integration test on ticket_viewer.main) have stdin mocked, and their possible values tested (valid inputs, invalid inputs, and abnormal inputs all). 
 
 
 

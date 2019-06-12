@@ -1,4 +1,4 @@
-import ticket_viewer, display_ticket_list, display_ticket, zendesk_interface
+import ticket_viewer, display_ticket_list, display_ticket, zendesk_interface, io_process
 from unittest import mock
 import os, contextlib, sys, traceback, io
 
@@ -8,19 +8,18 @@ def main():
 	print("Testing complete.")
 
 def unit_tests():
-	ticket_viewer_tests()
+	io_process_tests()
 	display_ticket_list_tests()
 	display_ticket_tests()
 	zendesk_interface_tests()
 
-
-def ticket_viewer_tests():
+def io_process_tests():
 	def test_get_command():
 		print("Testing get_command; may hang on input "
 			"(entering 'z' or 'c' should resolve)")
 		with mock.patch('builtins.input',side_effect=["f","b","c","d","e"]):
 			leftover_input=[]
-			command=ticket_viewer.get_command(["z","c"])
+			command=io_process.get_command(["z","c"])
 			#flush output
 			while True:
 				try:
@@ -42,7 +41,7 @@ def ticket_viewer_tests():
 		with mock.patch('builtins.input',side_effect=[0,-20,"b",200,41,40,2,7]):
 			leftover_input=[]
 			sys.stdout = open(os.devnull, 'w')
-			number=ticket_viewer.get_number("",40)
+			number=io_process.get_number("",40)
 			sys.stdout = sys.__stdout__
 			#flush output
 			while True:
@@ -62,10 +61,10 @@ def ticket_viewer_tests():
 	def test_get_authentication():
 		login=("","","")
 		try:
-			login=ticket_viewer.get_authentication()
+			login=io_process.get_authentication()
 		except Exception:
 			print("Get authentication failed; {}".format(traceback.format_exc()))
-		if (login!=("https://internship-sample.zendesk.com/api/v2/tickets",
+		if (login!=("https://internship-sample.zendesk.com",
 			"swannmar@gmail.com/token",
 			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx")):
 			print("Issue with get authentication: read {}".format(str(login)))
@@ -97,15 +96,6 @@ def display_ticket_list_tests():
 			print("Display ticket list with artifical input failed; "
 				"{}".format(traceback.format_exc()))
 
-		#test on None input; deprecated
-		# try:
-		# 	sys.stdout = open(os.devnull, 'w')
-		# 	display_ticket_list.display_ticket_list(1,None)
-		# 	sys.stdout = sys.__stdout__
-		# except Exception:
-		# 	sys.stdout = sys.__stdout__
-		# 	print("Display ticket_list with None input failed; "
-		# 		"{}".format(traceback.format_exc()))
 		print("Display ticket_list test completed.")
 
 	def test_print_ticket_list(ticket_list,page,output):
@@ -129,17 +119,6 @@ def display_ticket_list_tests():
 				"{}".format(traceback.format_exc()))
 		print("Print ticket list test completed.")
 
-	# deprecated
-	def test_get_ticket_list():
-		try:
-			display_ticket_list.get_ticket_list("https://internship-sample.zendesk.com/api/v2/tickets",
-			"swannmar@gmail.com/token",
-			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx")
-		except SystemExit:
-			print("Get ticket list received a non-200 status code.")
-		except Exception:
-			print("Get ticket list failed; {}".format(traceback.format_exc()))
-		print("Get ticket list test completed.")
 
 	blank_ticket={}
 	blank_ticket_output=("Missing    Missing  Missing   Missing Missing    "
@@ -158,7 +137,6 @@ def display_ticket_list_tests():
 
 	test_print_ticket_list([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,2,
 		blank_ticket_output*10)
-	# test_get_ticket_list()
 
 
 def display_ticket_tests(): 
@@ -182,26 +160,11 @@ def display_ticket_tests():
 				"{}".format(traceback.format_exc()))
 		print("Display ticket test completed.")
 
-	# deprecated
-	def test_get_ticket():
-		try:
-			display_ticket.get_ticket(1,
-			"https://internship-sample.zendesk.com/api/v2/tickets",
-			"swannmar@gmail.com/token",
-			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx")
-		except SystemExit:
-			print("Get ticket received a non-200 status code.")
-		except Exception:
-			print("Get ticket failed; {}".format(traceback.format_exc()))
-		print("Get ticket test completed.")
-
 	test_display_ticket("\nid  : 7\nid2 : 8\n",{"id":7,"id2":8})
 	test_display_ticket("\n",{})
 	test_display_ticket(("\ntest                      : 89\n"
 		"really_long_variable_name : yes\n")
 		,{"test":89,"really_long_variable_name":"yes"})
-
-	# test_get_ticket()
 
 
 def zendesk_interface_tests(): 
@@ -244,8 +207,35 @@ def zendesk_interface_tests():
 					" {}".format(error_code,traceback.format_exc()))
 		print("Handle response code test completed.")
 
+	def test_get_ticket_list():
+		try:
+			zendesk_interface.get_ticket_list("https://internship-sample.zendesk.com",
+			"swannmar@gmail.com/token",
+			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx")
+		except SystemExit:
+			print("Get ticket list received a non-200 status code.")
+		except Exception:
+			print("Get ticket list failed; {}".format(traceback.format_exc()))
+		print("Get ticket list test completed.")
+
+
+
+	def test_get_ticket():
+		try:
+			zendesk_interface.get_ticket("https://internship-sample.zendesk.com",
+			"swannmar@gmail.com/token",
+			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx",
+			1)
+		except SystemExit:
+			print("Get ticket received a non-200 status code.")
+		except Exception:
+			print("Get ticket failed; {}".format(traceback.format_exc()))
+		print("Get ticket test completed.")
+
 	test_get_json()
 	test_handle_response_code()
+	test_get_ticket_list()
+	test_get_ticket()
 
 
 def integration_test():
