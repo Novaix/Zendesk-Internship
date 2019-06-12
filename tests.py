@@ -1,4 +1,4 @@
-import ticket_viewer, display_tickets, display_ticket, zendesk_interface
+import ticket_viewer, display_ticket_list, display_ticket, zendesk_interface
 from unittest import mock
 import os, contextlib, sys, traceback, io
 
@@ -9,7 +9,7 @@ def main():
 
 def unit_tests():
 	ticket_viewer_tests()
-	display_tickets_tests()
+	display_ticket_list_tests()
 	display_ticket_tests()
 	zendesk_interface_tests()
 
@@ -76,8 +76,8 @@ def ticket_viewer_tests():
 	test_get_authentication()
 
 
-def display_tickets_tests(): 
-	def test_display_tickets():
+def display_ticket_list_tests(): 
+	def test_display_ticket_list():
 		#test output structure
 		try:
 			successful_output=("\nID:        Type:    Priority: Status: Created:   "
@@ -87,20 +87,20 @@ def display_tickets_tests():
 
 			actual_output=io.StringIO()
 			with contextlib.redirect_stdout(actual_output):
-				display_tickets.display_tickets(1,(),[])
+				display_ticket_list.display_ticket_list(1,(),[])
 
 			if (actual_output.getvalue()!=successful_output):
-				print("Issue with display_tickets; output was\n{}."
+				print("Issue with display_ticket_list; output was\n{}."
 					"instead of\n{}.".format(actual_output.getvalue(),successful_output))
 
 		except Exception:
-			print("Display tickets with artifical input failed; "
+			print("Display ticket list with artifical input failed; "
 				"{}".format(traceback.format_exc()))
 
 		#test on None input
 		try:
 			sys.stdout = open(os.devnull, 'w')
-			display_tickets.display_tickets(1,
+			display_ticket_list.display_ticket_list(1,
 					("https://internship-sample.zendesk.com/api/v2/tickets",
 					"swannmar@gmail.com/token",
 					"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx"),
@@ -108,11 +108,11 @@ def display_tickets_tests():
 			sys.stdout = sys.__stdout__
 		except Exception:
 			sys.stdout = sys.__stdout__
-			print("Display tickets with None input failed; "
+			print("Display ticket_list with None input failed; "
 				"{}".format(traceback.format_exc()))
-		print("Display tickets test completed.")
+		print("Display ticket_list test completed.")
 
-	def test_print_tickets(tickets,page,output):
+	def test_print_ticket_list(ticket_list,page,output):
 		#run this a couple times with different inputs
 		#and check outputs
 		#do >26 ticket checks here too
@@ -122,27 +122,27 @@ def display_tickets_tests():
 
 			actual_output=io.StringIO()
 			with contextlib.redirect_stdout(actual_output):
-				display_tickets.print_tickets(tickets,page)
+				display_ticket_list.print_ticket_list(ticket_list,page)
 
 			if (actual_output.getvalue()!=successful_output):
-				print("Issue with print_tickets; output was\n{}."
+				print("Issue with print_ticket_list; output was\n{}."
 					"instead of\n{}.".format(actual_output.getvalue(),successful_output))
 
 		except Exception:
-			print("Print tickets failed; "
+			print("Print ticket list failed; "
 				"{}".format(traceback.format_exc()))
-		print("Print tickets test completed.")
+		print("Print ticket list test completed.")
 
-	def test_get_tickets():
+	def test_get_ticket_list():
 		try:
-			display_tickets.get_tickets("https://internship-sample.zendesk.com/api/v2/tickets",
+			display_ticket_list.get_ticket_list("https://internship-sample.zendesk.com/api/v2/tickets",
 			"swannmar@gmail.com/token",
 			"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx")
 		except SystemExit:
-			print("Get tickets received a non-200 status code.")
+			print("Get ticket list received a non-200 status code.")
 		except Exception:
-			print("Get tickets failed; {}".format(traceback.format_exc()))
-		print("Get tickets test completed.")
+			print("Get ticket list failed; {}".format(traceback.format_exc()))
+		print("Get ticket list test completed.")
 
 	blank_ticket={}
 	blank_ticket_output=("Missing    Missing  Missing   Missing Missing    "
@@ -155,13 +155,13 @@ def display_tickets_tests():
 	sample_ticket_output=("4          problem  urgent    open    2019-14-88 "
 	"1000-01-21 9999-99-99 \"this is a test subject\"  ['a', 'b', 'c']\n")
 
-	test_display_tickets()
-	test_print_tickets([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,1,
+	test_display_ticket_list()
+	test_print_ticket_list([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,1,
 		sample_ticket_output*5+blank_ticket_output*10+sample_ticket_output*10)
 
-	test_print_tickets([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,2,
+	test_print_ticket_list([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,2,
 		blank_ticket_output*10)
-	test_get_tickets()
+	test_get_ticket_list()
 
 
 def display_ticket_tests(): 

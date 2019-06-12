@@ -1,5 +1,5 @@
 import display_ticket
-import display_tickets
+import display_ticket_list
 import sys
 
 #As per https://develop.zendesk.com/hc/en-us/articles/360001074168-Making-requests-to-the-Zendesk-API
@@ -37,7 +37,7 @@ def main():
 	#input loop
 	while(True):
 		#display list of tickets
-		(page_max,tickets)=display_tickets.display_tickets(page,login,tickets)
+		(page_max,tickets)=display_ticket_list.display_ticket_list(page,login,tickets)
 		#get a command from user
 		command=get_command(commands.keys())
 		#execude command AND update page as necessary
