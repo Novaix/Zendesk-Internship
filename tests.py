@@ -87,7 +87,7 @@ def display_ticket_list_tests():
 
 			actual_output=io.StringIO()
 			with contextlib.redirect_stdout(actual_output):
-				display_ticket_list.display_ticket_list(1,(),[])
+				display_ticket_list.display_ticket_list(1,[])
 
 			if (actual_output.getvalue()!=successful_output):
 				print("Issue with display_ticket_list; output was\n{}."
@@ -97,19 +97,15 @@ def display_ticket_list_tests():
 			print("Display ticket list with artifical input failed; "
 				"{}".format(traceback.format_exc()))
 
-		#test on None input
-		try:
-			sys.stdout = open(os.devnull, 'w')
-			display_ticket_list.display_ticket_list(1,
-					("https://internship-sample.zendesk.com/api/v2/tickets",
-					"swannmar@gmail.com/token",
-					"x3hlrjtVYH7oT6zTGjhv4fIV2z2r0sSrnEjLK2vx"),
-					None)
-			sys.stdout = sys.__stdout__
-		except Exception:
-			sys.stdout = sys.__stdout__
-			print("Display ticket_list with None input failed; "
-				"{}".format(traceback.format_exc()))
+		#test on None input; deprecated
+		# try:
+		# 	sys.stdout = open(os.devnull, 'w')
+		# 	display_ticket_list.display_ticket_list(1,None)
+		# 	sys.stdout = sys.__stdout__
+		# except Exception:
+		# 	sys.stdout = sys.__stdout__
+		# 	print("Display ticket_list with None input failed; "
+		# 		"{}".format(traceback.format_exc()))
 		print("Display ticket_list test completed.")
 
 	def test_print_ticket_list(ticket_list,page,output):
@@ -133,6 +129,7 @@ def display_ticket_list_tests():
 				"{}".format(traceback.format_exc()))
 		print("Print ticket list test completed.")
 
+	# deprecated
 	def test_get_ticket_list():
 		try:
 			display_ticket_list.get_ticket_list("https://internship-sample.zendesk.com/api/v2/tickets",
@@ -161,12 +158,12 @@ def display_ticket_list_tests():
 
 	test_print_ticket_list([sample_ticket]*5+[blank_ticket]*10+[sample_ticket]*10+[blank_ticket]*10,2,
 		blank_ticket_output*10)
-	test_get_ticket_list()
+	# test_get_ticket_list()
 
 
 def display_ticket_tests(): 
 
-	def test_print_ticket(output,ticket):
+	def test_display_ticket(output,ticket):
 		#run this a couple times with different inputs
 		#and check outputs
 		try:
@@ -174,17 +171,18 @@ def display_ticket_tests():
 
 			actual_output=io.StringIO()
 			with contextlib.redirect_stdout(actual_output):
-				display_ticket.print_ticket(ticket)
+				display_ticket.display_ticket(ticket)
 
 			if (actual_output.getvalue()!=successful_output):
-				print("Issue with print_ticket; output was\n{}."
+				print("Issue with display_ticket; output was\n{}."
 					"instead of\n{}.".format(actual_output.getvalue(),successful_output))
 
 		except Exception:
-			print("Print ticket failed; "
+			print("Display ticket failed; "
 				"{}".format(traceback.format_exc()))
-		print("Print ticket test completed.")
+		print("Display ticket test completed.")
 
+	# deprecated
 	def test_get_ticket():
 		try:
 			display_ticket.get_ticket(1,
@@ -197,13 +195,13 @@ def display_ticket_tests():
 			print("Get ticket failed; {}".format(traceback.format_exc()))
 		print("Get ticket test completed.")
 
-	test_print_ticket("id  : 7\nid2 : 8\n",{"id":7,"id2":8})
-	test_print_ticket("",{})
-	test_print_ticket(("test                      : 89\n"
+	test_display_ticket("\nid  : 7\nid2 : 8\n",{"id":7,"id2":8})
+	test_display_ticket("\n",{})
+	test_display_ticket(("\ntest                      : 89\n"
 		"really_long_variable_name : yes\n")
 		,{"test":89,"really_long_variable_name":"yes"})
 
-	test_get_ticket()
+	# test_get_ticket()
 
 
 def zendesk_interface_tests(): 

@@ -1,10 +1,5 @@
-import zendesk_interface
-
 #display list of tickets, with pages
-def display_ticket_list(page,login,tickets):
-	#get new list if it needs updating
-	if tickets==None:
-		tickets=get_ticket_list(*login)["tickets"]
+def display_ticket_list(page,tickets):
 	page_max=1+len(tickets)//25
 	#print column headers; assumed max ID of 1,000,000,000
 	#(every other field is bounded automatically except the last)
@@ -47,15 +42,3 @@ def print_ticket_list(tickets,page):
 			str(ticket.get("due_at","Missing")),
 			str(subject),
 			str(ticket.get("tags","Missing"))))
-
-#get requests the list of all tickets
-def get_ticket_list(url,user,pwd):
-	tickets=zendesk_interface.get_json(url+'.json',user,pwd)
-	
-	#if there is more than one API-side page of tickets
-	#append new pages to ticket list and update next page until finished
-	while (tickets["next_page"]!=None):
-		more_tickets=zendesk_interface.get_json(tickets["next_page"],user,pwd)
-		tickets["tickets"]+=more_tickets["tickets"]
-		tickets["next_page"]=more_tickets["next_page"]
-	return tickets

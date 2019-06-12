@@ -21,9 +21,9 @@ The list of tickets is displayed in table format, with the following fields: id,
 
 It is assumed that the maximum ticket ID is 1,000,000,000. Ticket IDs higher than this should only cause trivial display issues at best, i.e. slightly-misaligned columns.
 
-It is acknowledged that refactoring the code by taking the get_tickets and get_ticket functions and moving them to ticket_viewer would be a superior design (insofar as being easier to edit, having fewer dependencies, and better cohesion of modules); the current design has no meaningful advantage, and is only the way it is as a result of time constraints.
-
-Possible other improvements would include moving more of the API-related functions (such as appending the proper strings to the base url) to zendesk_interface, and maybe extracting out the input/output and putting that in its own module separate to the ticket_viewer module (which presently handles both input/output as well as overall program logic/structure).
+The current design has no meaningful advantage, and is only the way it is as a result of time constraints, so the following changes are acknowledged as improvements:
+-moving more of the API-related functions (such as appending the proper strings to the base url) to zendesk_interface
+-maybe extracting out the input/output and putting that in its own module separate to the ticket_viewer module (which presently handles both input/output as well as overall program logic/structure).
 
 The tests were constructed by writing one test for each function, after removing the trivial functions (such as get_ticket, which is basically just a call to get_json (see previous comment about moving API functions to zendesk_interface!)). API-related functions just involve running the function and ensuring it does not crash. Functions with meaningful output or return values have those compared to what they are supposed to be, as basic unit tests; this includes abnormal input/output or input/return pairs, such as displaying an empty ticket. Functions that require input (this includes an integration test on ticket_viewer.main) have stdin mocked, and their possible values tested (valid inputs, invalid inputs, and abnormal inputs all). 
 
